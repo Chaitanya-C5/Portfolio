@@ -7,11 +7,11 @@ import * as random from 'maath/random/dist/maath-random.esm';
 
 const Stars = (props) => {
   const ref = useRef();
-  const [sphere] = useState(() =>
-    random.inSphere(new Float32Array(6000), { radius: 1.2 }).map(value =>
-      isNaN(value) ? 0 : value  // Replace NaN values with 0
-    )
-  );
+  
+  // Using a variable to check if the user is on mobile or not
+  const isMobile = window.matchMedia('(max-width: 500px)').matches;
+  
+  const [sphere] = useState(() => random.inSphere(new Float32Array(isMobile ? 2000 : 6000), { radius: 1.2 }));
 
   useFrame((state, delta) => {
     if (ref.current) {
