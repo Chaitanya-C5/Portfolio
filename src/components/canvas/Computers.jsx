@@ -23,7 +23,7 @@ const Computers = ({ isMobile }) => {
       />
       <primitive
         object={computer.scene}
-        scale={isMobile ? 0.65 : 0.75}
+        scale={isMobile ? 0.5 : 0.75} // Adjust scale for mobile
         position={isMobile ? [0, -3, -2.2] : [0, -2.8, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
       />
@@ -54,7 +54,7 @@ const ComputersCanvas = () => {
     const handleContextLost = (event) => {
       event.preventDefault(); // Prevent the default context restoration
       console.warn("WebGL context lost!");
-      // Optionally, show a message or reload the scene
+      // Optionally show a message or reload the scene
     };
 
     const handleContextRestored = () => {
@@ -63,12 +63,16 @@ const ComputersCanvas = () => {
     };
 
     const glCanvas = document.querySelector("canvas");
-    glCanvas.addEventListener("webglcontextlost", handleContextLost, false);
-    glCanvas.addEventListener("webglcontextrestored", handleContextRestored, false);
+    if (glCanvas) {
+      glCanvas.addEventListener("webglcontextlost", handleContextLost, false);
+      glCanvas.addEventListener("webglcontextrestored", handleContextRestored, false);
+    }
 
     return () => {
-      glCanvas.removeEventListener("webglcontextlost", handleContextLost);
-      glCanvas.removeEventListener("webglcontextrestored", handleContextRestored);
+      if (glCanvas) {
+        glCanvas.removeEventListener("webglcontextlost", handleContextLost);
+        glCanvas.removeEventListener("webglcontextrestored", handleContextRestored);
+      }
     };
   }, []);
 
