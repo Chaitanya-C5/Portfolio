@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
 import React, { Suspense, useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 
@@ -23,7 +23,7 @@ const Computers = ({ isMobile }) => {
       />
       <primitive
         object={computer.scene}
-        scale={isMobile ? 0.5 : 0.75} // Adjust scale for mobile
+        scale={isMobile ? 0.65 : 0.75}
         position={isMobile ? [0, -3, -2.2] : [0, -2.8, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
       />
@@ -37,41 +37,24 @@ const ComputersCanvas = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 500px)");
     setIsMobile(mediaQuery.matches);
-
     const handleMediaQueryChange = (event) => {
       setIsMobile(event.matches);
     };
 
     mediaQuery.addEventListener("change", handleMediaQueryChange);
-
     return () => {
       mediaQuery.removeEventListener("change", handleMediaQueryChange);
     };
   }, []);
 
-  // WebGL context loss handling
+  // Cleanup to prevent memory leaks and context loss
   useEffect(() => {
-    const handleContextLost = (event) => {
-      event.preventDefault(); // Prevent the default context restoration
-      console.warn("WebGL context lost!");
-      // Optionally show a message or reload the scene
-    };
-
-    const handleContextRestored = () => {
-      console.info("WebGL context restored.");
-      // Optionally re-initialize or reload the scene
-    };
-
-    const glCanvas = document.querySelector("canvas");
-    if (glCanvas) {
-      glCanvas.addEventListener("webglcontextlost", handleContextLost, false);
-      glCanvas.addEventListener("webglcontextrestored", handleContextRestored, false);
-    }
+    const renderer = document.querySelector("canvas");
 
     return () => {
-      if (glCanvas) {
-        glCanvas.removeEventListener("webglcontextlost", handleContextLost);
-        glCanvas.removeEventListener("webglcontextrestored", handleContextRestored);
+      if (renderer) {
+        // Dispose of the renderer
+        renderer.remove();
       }
     };
   }, []);
