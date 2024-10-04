@@ -12,7 +12,6 @@ const initalState = {
   email: "",
   message: ""
 }
-
 const Contact = () => {
 
   const [form, setForm] = useState(initalState) 
