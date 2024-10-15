@@ -1,2 +1,1 @@
-This is my personal porfolio
-https://chaitanyasai-portfolio.netlify.app/
+This is my portfolio: https://chaitanyasai-portfolio.netlify.app/
